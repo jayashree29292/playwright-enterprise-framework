@@ -2,7 +2,7 @@
 
 ![CI](https://github.com/jayashree29292/playwright-enterprise-framework/actions/workflows/playwright.yml/badge.svg)
 
-I built this during my break to get hands-on with Playwright. I've been working with Cypress at Veeva for the past few years and wanted to build something from scratch in Playwright + TypeScript to understand the framework deeply — not just follow a tutorial.
+I built this to get hands-on with Playwright. I've been working with Cypress at Veeva for the past few years and wanted to build something from scratch in Playwright + TypeScript to understand the framework deeply — not just follow a tutorial.
 
 The app under test is the [Restful Booker Platform](https://automationintesting.online) — a hotel booking app built specifically for automation practice. It has a real UI and a REST API which made it a good fit for what I wanted to build.
 
