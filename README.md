@@ -77,6 +77,7 @@ npx playwright show-report
 - Screenshots and video captured on failure
 - Trace files recorded on retry for debugging
 - GitHub Actions pipeline running on every push
+- 
 
 ---
 
