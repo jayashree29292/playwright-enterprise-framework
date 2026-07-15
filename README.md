@@ -1,4 +1,4 @@
-# playwright-enterprise-framework
+# playwright-hotel-booking-framework
 
 ![CI](https://github.com/jayashree29292/playwright-enterprise-framework/actions/workflows/playwright.yml/badge.svg)
 
