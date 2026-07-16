@@ -1,36 +1,68 @@
 import { test, expect } from '@playwright/test';
 import { LoginPage } from '../../pages/LoginPage';
+import { AdminCredentials } from '../../utils/testData';
+import { Logger } from '../../utils/logger';
 
 test.describe('Admin Login', () => {
 
-  test('should login with valid credentials', async ({ page }) => {
-    const loginPage = new LoginPage(page);
+  test('@smoke @critical should login with valid credentials', async ({ page }) => {
+    await test.step('Navigate to admin login page', async () => {
+      const loginPage = new LoginPage(page);
+      await loginPage.goto();
+      Logger.step('Navigated to admin login');
+    });
 
-    await loginPage.goto();
-    await loginPage.login('admin', 'password');
+    await test.step('Login with valid credentials', async () => {
+      const loginPage = new LoginPage(page);
+      await loginPage.login(
+        AdminCredentials.valid.username,
+        AdminCredentials.valid.password
+      );
+      Logger.uiState('Credentials used', AdminCredentials.valid.username);
+    });
 
-    // After successful login URL should change away from /admin
-    await expect(page).not.toHaveURL('/admin');
+    await test.step('Verify successful login', async () => {
+      await expect(page).not.toHaveURL('/admin');
+      Logger.uiState('Login successful', true);
+    });
   });
 
-  test('should show error with invalid credentials', async ({ page }) => {
+  test('@regression should show error with invalid credentials', async ({ page }) => {
     const loginPage = new LoginPage(page);
-
     await loginPage.goto();
-    await loginPage.login('wronguser', 'wrongpassword');
 
-    const error = await loginPage.getErrorMessage();
-    expect(error).toContain('Invalid credentials');
+    await test.step('Login with invalid credentials', async () => {
+      await loginPage.login(
+        AdminCredentials.invalid.username,
+        AdminCredentials.invalid.password
+      );
+      Logger.uiState('Invalid credentials used', AdminCredentials.invalid.username);
+    });
+
+    await test.step('Verify error message appears', async () => {
+      const error = await loginPage.getErrorMessage();
+      expect(error).toContain('Invalid credentials');
+      Logger.uiState('Error message', error);
+    });
   });
 
-  test('should show error when fields are empty', async ({ page }) => {
+  test('@regression should show error when fields are empty', async ({ page }) => {
     const loginPage = new LoginPage(page);
-
     await loginPage.goto();
-    await loginPage.login('', '');
 
-    const error = await loginPage.getErrorMessage();
-    expect(error).toBeTruthy();
+    await test.step('Submit empty login form', async () => {
+      await loginPage.login(
+        AdminCredentials.empty.username,
+        AdminCredentials.empty.password
+      );
+      Logger.step('Submitted empty form');
+    });
+
+    await test.step('Verify error message appears', async () => {
+      const error = await loginPage.getErrorMessage();
+      expect(error).toBeTruthy();
+      Logger.uiState('Error message visible', true);
+    });
   });
 
 });
