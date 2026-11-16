@@ -49,7 +49,8 @@ export const BookingData = {
   // Valid booking payload — API tests
   valid: {
     firstname: 'Jai',
-    lastname: 'Tester',ice: 150,
+    lastname: 'Tester',
+    totalprice: 150,
     depositpaid: true,
     bookingdates: {
       checkin: '2026-08-01',

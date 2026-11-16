@@ -25,7 +25,8 @@ export class LoginPage {
     await this.loginButton.click();
   }
 
-  async getErrorMessage() {
-    return this.errorMessage.textContent();
+  async getErrorMessage(): Promise<string> {
+    await this.errorMessage.waitFor({ state: 'visible' });
+    return (await this.errorMessage.textContent()) ?? '';
   }
 }

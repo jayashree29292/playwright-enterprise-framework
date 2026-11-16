@@ -1,19 +1,15 @@
-import { test, expect } from '@playwright/test';
-import { LoginPage } from '../../pages/LoginPage';
+import { test, expect } from '../../fixtures/index';
 import { AdminCredentials } from '../../utils/testData';
 import { Logger } from '../../utils/logger';
 
 test.describe('Admin Login', () => {
 
-  test('@smoke @critical should login with valid credentials', async ({ page }) => {
-    await test.step('Navigate to admin login page', async () => {
-      const loginPage = new LoginPage(page);
-      await loginPage.goto();
-      Logger.step('Navigated to admin login');
-    });
+  test.beforeEach(async ({ loginPage }) => {
+    await loginPage.goto();
+  });
 
+  test('should login with valid credentials', { tag: ['@smoke', '@critical'] }, async ({ loginPage, page }) => {
     await test.step('Login with valid credentials', async () => {
-      const loginPage = new LoginPage(page);
       await loginPage.login(
         AdminCredentials.valid.username,
         AdminCredentials.valid.password
@@ -22,15 +18,12 @@ test.describe('Admin Login', () => {
     });
 
     await test.step('Verify successful login', async () => {
-      await expect(page).not.toHaveURL('/admin');
+      await expect(page.getByRole('button', { name: 'Logout' })).toBeVisible();
       Logger.uiState('Login successful', true);
     });
   });
 
-  test('@regression should show error with invalid credentials', async ({ page }) => {
-    const loginPage = new LoginPage(page);
-    await loginPage.goto();
-
+  test('should show error with invalid credentials', { tag: ['@regression'] }, async ({ loginPage }) => {
     await test.step('Login with invalid credentials', async () => {
       await loginPage.login(
         AdminCredentials.invalid.username,
@@ -46,10 +39,7 @@ test.describe('Admin Login', () => {
     });
   });
 
-  test('@regression should show error when fields are empty', async ({ page }) => {
-    const loginPage = new LoginPage(page);
-    await loginPage.goto();
-
+  test('should show error when fields are empty', { tag: ['@regression'] }, async ({ loginPage }) => {
     await test.step('Submit empty login form', async () => {
       await loginPage.login(
         AdminCredentials.empty.username,

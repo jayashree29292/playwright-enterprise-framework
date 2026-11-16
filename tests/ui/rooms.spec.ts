@@ -1,29 +1,21 @@
-import { test, expect } from '@playwright/test';
-import { RoomsPage } from '../../pages/RoomsPage';
+import { test, expect } from '../../fixtures/index';
 import { RoomData } from '../../utils/testData';
 import { Logger } from '../../utils/logger';
 
 test.describe('Rooms Page', () => {
 
-  test('@smoke should display Our Rooms heading', async ({ page }) => {
-    await test.step('Navigate to homepage', async () => {
-      const roomsPage = new RoomsPage(page);
-      await roomsPage.goto();
-      Logger.step('Navigated to homepage');
-    });
+  test.beforeEach(async ({ roomsPage }) => {
+    await roomsPage.goto();
+  });
 
+  test('should display Our Rooms heading', { tag: ['@smoke'] }, async ({ page }) => {
     await test.step('Verify Our Rooms heading is visible', async () => {
-      await expect(
-        page.getByRole('heading', { name: 'Our Rooms' })
-      ).toBeVisible();
+      await expect(page.getByRole('heading', { name: 'Our Rooms' })).toBeVisible();
       Logger.uiState('Heading visible', 'Our Rooms');
     });
   });
 
-  test('@regression should display exactly 3 rooms', async ({ page }) => {
-    const roomsPage = new RoomsPage(page);
-    await roomsPage.goto();
-
+  test('should display exactly 3 rooms', { tag: ['@regression'] }, async ({ roomsPage }) => {
     await test.step('Count room cards on page', async () => {
       const count = await roomsPage.getRoomCount();
       Logger.uiState('Room count', count);
@@ -31,10 +23,7 @@ test.describe('Rooms Page', () => {
     });
   });
 
-  test('@regression should display all three room types', async ({ page }) => {
-    const roomsPage = new RoomsPage(page);
-    await roomsPage.goto();
-
+  test('should display all three room types', { tag: ['@regression'] }, async ({ roomsPage }) => {
     for (const roomType of RoomData.types) {
       await test.step(`Verify ${roomType} room is visible`, async () => {
         const room = await roomsPage.getRoomByName(roomType);
@@ -44,10 +33,7 @@ test.describe('Rooms Page', () => {
     }
   });
 
-  test('@regression should show Book now button for each room', async ({ page }) => {
-    const roomsPage = new RoomsPage(page);
-    await roomsPage.goto();
-
+  test('should show Book now button for each room', { tag: ['@regression'] }, async ({ roomsPage }) => {
     for (const roomType of RoomData.types) {
       await test.step(`Verify Book now button for ${roomType}`, async () => {
         const button = await roomsPage.getBookNowButton(roomType);
@@ -58,10 +44,7 @@ test.describe('Rooms Page', () => {
     }
   });
 
-  test('@regression should validate room prices using soft assertions', async ({ page }) => {
-    const roomsPage = new RoomsPage(page);
-    await roomsPage.goto();
-
+  test('should validate room prices using soft assertions', { tag: ['@regression'] }, async ({ roomsPage }) => {
     for (const roomType of RoomData.types) {
       await test.step(`Validate ${roomType} room price`, async () => {
         const price = await roomsPage.getPriceText(roomType);
@@ -73,10 +56,7 @@ test.describe('Rooms Page', () => {
     expect(test.info().errors).toHaveLength(0);
   });
 
-  test('@regression should display amenities for each room', async ({ page }) => {
-    const roomsPage = new RoomsPage(page);
-    await roomsPage.goto();
-
+  test('should display amenities for each room', { tag: ['@regression'] }, async ({ roomsPage }) => {
     for (const roomType of RoomData.types) {
       await test.step(`Verify ${roomType} room amenities`, async () => {
         const room = await roomsPage.getRoomByName(roomType);

@@ -1,12 +1,14 @@
 import { defineConfig, devices } from '@playwright/test';
 
+declare const process: { env: Record<string, string | undefined> };
+
 export default defineConfig({
   testDir: './tests',
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 1 : undefined,
-  reporter: 'html',
+  workers: process.env.CI ? 2 : undefined,
+  reporter: [['html'], ['dot']],
 
   use: {
     baseURL: 'https://automationintesting.online',
@@ -20,9 +22,9 @@ export default defineConfig({
       name: 'chromium',
       use: { 
         ...devices['Desktop Chrome'],
-        launchOptions: {
-          slowMo: 1000
-        }
+        // launchOptions: {
+        //   slowMo: 1000
+        // }
       },
     },
   ],
